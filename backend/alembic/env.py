@@ -10,6 +10,9 @@ sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..'
 
 from app.core.config import settings
 from app.db.session import Base
+from app.models.user import User
+from app.models.article import Article
+from app.models.analysis import Analysis
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -37,7 +40,8 @@ def run_migrations_offline() -> None:
 def do_run_migrations(connection):
     context.configure(
         connection=connection,
-        target_metadata=target_metadata
+        target_metadata=target_metadata,
+        render_as_batch=True
     )
 
     with context.begin_transaction():

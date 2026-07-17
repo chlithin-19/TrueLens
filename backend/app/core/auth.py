@@ -13,7 +13,7 @@ from app.db.session import get_db
 from app.models.user import User
 
 logger = logging.getLogger("truelens.auth")
-
+# Trigger reload for .env change
 # Security scheme for FastAPI docs / auth extraction
 reusable_oauth2 = HTTPBearer(auto_error=False)
 

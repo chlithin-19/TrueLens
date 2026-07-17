@@ -32,6 +32,16 @@ class Settings(BaseSettings):
     CLERK_JWKS_URL: str = "https://api.clerk.com/v1/jwks"
     CLERK_ISSUER: str = ""
 
+    # Gemini AI
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.0-flash"
+
+    # AI Pipeline
+    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
+    CHROMA_COLLECTION: str = "truelens_articles"
+
+    # External APIs
+    GOOGLE_FACT_CHECK_API_KEY: str = ""
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod

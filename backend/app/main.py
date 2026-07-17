@@ -10,10 +10,12 @@ from app.db.session import db_manager, Base
 from app.db.redis import redis_client
 from app.db.chroma import chroma_manager
 from app.api.endpoints import analyze, auth, users
+from app.services import nlp_preprocessor, sentiment_analyzer, gemini_analyzer, embedding_service
 
 # Register models for Base.metadata.create_all discovery
 from app.models.user import User
 from app.models.analysis import Analysis
+from app.models.article import Article
 
 
 # Configure Logging
@@ -70,6 +72,11 @@ async def startup_event():
     
     # 3. Connect Chroma (falls back automatically to in-memory local client if offline)
     chroma_manager.connect()
+    
+    # 4. Initialize AI Models
+    logger.info("Initializing NLP models...")
+    nlp_preprocessor._ensure_models_loaded()
+    embedding_service._ensure_initialized()
 
 @app.on_event("shutdown")
 async def shutdown_event():
