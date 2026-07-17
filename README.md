@@ -1,40 +1,68 @@
-<<<<<<< HEAD
-# Hi
-=======
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TrueLens
 
-## Getting Started
+TrueLens is an advanced AI-powered article analysis and fact-checking application. It consists of a Next.js frontend (React 19) and a FastAPI (Python 3.12) backend, utilizing Gemini for AI analysis, Redis for caching, and PostgreSQL/SQLite for data storage.
 
-First, run the development server:
+## Architecture
 
+- **Frontend (`TrueLens/`)**: Next.js App Router, Tailwind CSS, Framer Motion, Clerk Authentication.
+- **Backend (`backend/`)**: FastAPI, SQLAlchemy, Redis Cache, Google Gemini API, ChromaDB for embeddings.
+
+## Local Setup
+
+### 1. Prerequisites
+- Node.js 18+
+- Python 3.12+
+- (Optional) Docker and Docker Compose
+
+### 2. Environment Variables
+
+**Frontend (`TrueLens/.env.local`)**:
+See `TrueLens/.env.local.example` for required keys (Clerk & API URL).
+
+**Backend (`backend/.env`)**:
+See `backend/.env.example` for required keys (Database, Redis, Gemini API, Clerk).
+
+### 3. Running Locally (Manual)
+
+#### Backend
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd backend
+python -m venv venv
+# Windows: venv\Scripts\activate | Mac/Linux: source venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Frontend
+```bash
+cd TrueLens
+npm install
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Running Locally (Docker Compose)
+To run the backend and Redis easily via Docker:
+```bash
+docker-compose up --build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment Guide
 
-## Learn More
+### Frontend (Vercel)
+The frontend is optimized for deployment on Vercel.
+1. Connect your GitHub repository to Vercel.
+2. Set the Root Directory to `TrueLens`.
+3. Configure the environment variables from `.env.local`.
+4. Deploy!
 
-To learn more about Next.js, take a look at the following resources:
+### Backend (Railway)
+The backend includes a `railway.json` and `Dockerfile` for seamless deployment.
+1. Connect the repository to Railway.
+2. Ensure the root directory is set to `/backend` in the service settings.
+3. Configure your Environment Variables.
+4. Deploy!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
->>>>>>> 4e18618 (Initial commit from Create Next App)
+## Optimization Details
+- **Lazy Loading**: Heavy components like data tables are dynamically imported using `next/dynamic`.
+- **API Caching**: Redis caches analysis requests to avoid redundant AI calls.
+- **Background Tasks**: Embeddings generation and database saving run as background tasks to keep API responses fast.
