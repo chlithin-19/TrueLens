@@ -11,6 +11,11 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Pre-download AI models so they are baked into the Docker image
+# This prevents the app from hanging on startup and timing out on Render
+RUN python -m spacy download en_core_web_sm
+RUN python -c "import os; os.environ['HF_HUB_DISABLE_SYMLINKS_WARNING'] = '1'; from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
 # Copy the rest of the application code
 COPY . .
 
