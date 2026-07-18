@@ -92,10 +92,19 @@ async def startup_event():
     # 3. Connect Chroma (falls back automatically to in-memory local client if offline)
     chroma_manager.connect()
     
-    # 4. Initialize AI Models
-    logger.info("Initializing NLP models...")
-    nlp_preprocessor._ensure_models_loaded()
-    embedding_service._ensure_initialized()
+    # 4. Initialize AI Models (DISABLED ON STARTUP FOR FREE TIER)
+    # Loading Spacy and Torch on startup causes Render 512MB RAM limit OOMs
+    # By commenting this out, the models will lazy-load ONLY when an analysis request is made.
+    # nlp_preprocessor._ensure_models_loaded()
+    # embedding_service._ensure_initialized()
+    
+    # Configure PyTorch to use less memory (if available)
+    try:
+        import torch
+        torch.set_num_threads(1)
+        logger.info("Configured PyTorch to use 1 thread to save memory on free tier.")
+    except ImportError:
+        pass
 
 @app.on_event("shutdown")
 async def shutdown_event():
